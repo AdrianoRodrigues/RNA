@@ -12,7 +12,7 @@ H = 5;         % neuronios na camada escondida
 O = 1;          % neuronios na camada de saida
 ETA = 0.001;    % taxa de aprendizado
 E_MAX = 0.0025; % erro maximo
-EPOCHS = 200;   % quantidade de epocas para o treinamento da rede
+EPOCHS = 500;   % quantidade de epocas para o treinamento da rede
 TRAIN = 0.7;    % percentual dos dados usados para treinar a rede
 
 % dados de entrada
@@ -34,6 +34,7 @@ D_test = sin(X_test);
 % matriz que ira armazenar o erro quadratico medio
 Eav = [];
 
+vars = load ('data.mat'); 
 if INIT_WEIGHTS == 1
   % inicializacao dos pesos entre camada de entrada e camada escondida
   Whi = rand(H, I) - 0.5; 
@@ -44,8 +45,11 @@ if INIT_WEIGHTS == 1
   bias_oh = rand(O, 1) - 0.5;
 
   INIT_WEIGHTS = 0;
-else
-  load data.mat Whi Woh bias_hi bias_oh
+else  
+  Whi = vars.Whi;
+  Woh = vars.Woh;
+  bias_hi = vars.bias_hi; 
+  bias_oh = vars.bias_oh;
 end
 
 for epoch = 1 : EPOCHS
@@ -112,10 +116,16 @@ for epoch = 1 : EPOCHS
  
 end
 
-save data.mat Whi Woh bias_hi bias_oh Eav
+% irá salvar novos pesos somente se houve alteração na quantidade de epocas
+% ou se o último erro for menor do que o último erro anterior ao inicio do 
+% treinamento.
+if size(vars.Eav, 2) != EPOCHS || Eav(EPOCHS) < vars.Eav(EPOCHS)
+  save data.mat Whi Woh bias_hi bias_oh Eav
+end
 
 figure(2)
 plot(X_train, net_o, 'color', 'red', X_train, D_train, 'color', 'green');
+title ("Trainning sin(x) for x = linspace(0, 2*pi, 750)");
 
 %% Testando
 % entrada da camada escondida com bias
@@ -129,3 +139,4 @@ net_o = Woh * Yh + bias_oh * ones(1, size(Yh, 2));
 
 figure(3)
 plot(X_test, net_o, 'color', 'red', X_test, D_test, 'color', 'green');
+title ("Test sin(x) for x = linspace(0, 2*pi, 250)");
