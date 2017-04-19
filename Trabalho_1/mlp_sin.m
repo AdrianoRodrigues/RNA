@@ -12,7 +12,7 @@ H = 5;         % neuronios na camada escondida
 O = 1;          % neuronios na camada de saida
 ETA = 0.001;    % taxa de aprendizado
 E_MAX = 0.0025; % erro maximo
-EPOCHS = 500;   % quantidade de epocas para o treinamento da rede
+EPOCHS = 250;   % quantidade de epocas para o treinamento da rede
 TRAIN = 0.7;    % percentual dos dados usados para treinar a rede
 
 % dados de entrada
@@ -21,8 +21,8 @@ TRAIN = 0.7;    % percentual dos dados usados para treinar a rede
 %X = linspace(0, 2*pi, 100);
 %X_train = X(1:floor(TRAIN.*end));
 %X_test = X(floor(TRAIN.*end)+1:end);
-X_train = linspace(0, 2*pi, 750);
-X_test = linspace(0, 2*pi, 250);
+X_train = sort(rand(1, 1000)*2*pi); %linspace(0, 2*pi, 1000);
+X_test = sort(rand(1, 300)*2*pi); %linspace(0, 2*pi, 300);
 
 % resultado esperado
 %D = sin(X);
@@ -35,17 +35,17 @@ D_test = sin(X_test);
 Eav = [];
 
 vars = load ('data.mat'); 
-if INIT_WEIGHTS == 1
+if exist('INIT_WEIGHTS', 'var') == 1 && INIT_WEIGHTS == 1
+  printf('Inicializando pesos...\n');
   % inicializacao dos pesos entre camada de entrada e camada escondida
   Whi = rand(H, I) - 0.5; 
   bias_hi = rand(H, 1) - 0.5;
 
   % inicializacao dos pesos entre camada escondida e camada de saida
   Woh = rand(O, H) - 0.5; 
-  bias_oh = rand(O, 1) - 0.5;
-
-  INIT_WEIGHTS = 0;
+  bias_oh = rand(O, 1) - 0.5;  
 else  
+  printf('Carregando pesos...\n');
   Whi = vars.Whi;
   Woh = vars.Woh;
   bias_hi = vars.bias_hi; 
@@ -103,7 +103,7 @@ for epoch = 1 : EPOCHS
   plot(Eav)
   refresh(); 
     
-  if rem(epoch, 100) == 0
+  if rem(epoch, 50) == 0
     fprintf('epoch: %d, erro: %f\n', epoch, Eav(epoch));
   end
   
@@ -116,16 +116,18 @@ for epoch = 1 : EPOCHS
  
 end
 
-% irá salvar novos pesos somente se houve alteração na quantidade de epocas
-% ou se o último erro for menor do que o último erro anterior ao inicio do 
+% irï¿½ salvar novos pesos somente se houve alteraï¿½ï¿½o na quantidade de epocas
+% ou se o ï¿½ltimo erro for menor do que o ï¿½ltimo erro anterior ao inicio do 
 % treinamento.
-if size(vars.Eav, 2) != EPOCHS || Eav(EPOCHS) < vars.Eav(EPOCHS)
+if size(vars.Eav, 2) != EPOCHS || Eav(EPOCHS) < vars.Eav(EPOCHS) || INIT_WEIGHTS == 1
   save data.mat Whi Woh bias_hi bias_oh Eav
 end
 
+INIT_WEIGHTS = 0;
+
 figure(2)
 plot(X_train, net_o, 'color', 'red', X_train, D_train, 'color', 'green');
-title ("Trainning sin(x) for x = linspace(0, 2*pi, 750)");
+title ("Trainning sin(x)");
 
 %% Testando
 % entrada da camada escondida com bias
@@ -139,4 +141,4 @@ net_o = Woh * Yh + bias_oh * ones(1, size(Yh, 2));
 
 figure(3)
 plot(X_test, net_o, 'color', 'red', X_test, D_test, 'color', 'green');
-title ("Test sin(x) for x = linspace(0, 2*pi, 250)");
+title ("Test sin(x)");
