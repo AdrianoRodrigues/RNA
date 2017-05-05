@@ -1,0 +1,3 @@
+A entrada será composta por 7 neuronios, onde cada neuronio irá receber o valor decimal de cada linha da matriz que representa o caractere.
+
+A saida sera composta por 4 neuronios, que juntos irao representar o valor binario que deverá ser convertido para hexadecimal.
