@@ -1,9 +1,10 @@
-function output = mlp_predict(input_data, Whi, Bhi, Woh, Boh)
-    output = zeros(size(input_data, 1), 16);
+function Y = mlp_predict(input_data, Whi, Bhi, Woh, Boh)
+    k = 1;
+    Y = zeros(size(input_data, 1), 16);
     % Para cada entrada de treinamento
-    for i = 1:size(input_data, 1)
+    %for i = 1:size(input_data, 1)
         % Calcula entrada da camada escondida
-        net_h = Whi * input_data(i, :)' + Bhi;
+        net_h = Whi * input_data + Bhi * ones(32, 16);
         
         % Calcula saida da camada escondida / entrada da camada de saida
         Yh = logsig(net_h);
@@ -11,6 +12,6 @@ function output = mlp_predict(input_data, Whi, Bhi, Woh, Boh)
         % Calcula a saida da rede
         net_o = Woh * Yh + Boh;
         
-        output(i,:) = logsig(net_o)';
-    end
+        Y = k * net_o;
+    %end
 end

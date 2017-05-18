@@ -1,4 +1,5 @@
-function V = generate_noise(V, p)
+function new_V = generate_noise(V, p)
+    new_V = V;
     % vetor com as posicoes
     positions = 1:length(V);
 
@@ -9,5 +10,5 @@ function V = generate_noise(V, p)
     position_change = randsample(positions, num_changes);
 
     % muda o valor 1 -> 0 ou 0 -> 1
-    V(position_change) = ~V(position_change);
+    new_V(position_change) = ~V(position_change);    
 end

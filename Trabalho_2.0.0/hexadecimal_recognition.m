@@ -1,10 +1,8 @@
 hidden_neurons = 112;
 output_neurons = 16;
 learning_rate = 5e-4;
-max_epochs = 30000;
-
-% quantidade de novos exemplos com ruido que serao adicionados
-samples_extra = 5;
+max_epochs = 10000;
+samples_extra = 1; % quantidade de novos exemplos com ruido que serao adicionados
 
 % carrega os exemplos de treinamento
 input_data = load_data();
@@ -33,7 +31,9 @@ end
 % verificacao da rede
 [ xx, yy ] = normalize_input(input_data, 0);
 
-output = mlp_predict(xx, Whi, Bhi, Woh, Boh)
+output = mlp_predict(xx, Whi, Bhi, Woh, Boh);
+
+output > 0.5
 
 errr
 

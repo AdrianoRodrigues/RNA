@@ -20,4 +20,7 @@ function [normalized_input, target] = normalize_input(input_data, total_noise)
         target(i, floor((i - 1) / (total_noise + 1)) + 1) = 1;
     end
     normalized_input(normalized_input == 0) = -1;
+    
+    target = target';
+    normalized_input = normalized_input';
 end
